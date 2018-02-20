@@ -72,3 +72,6 @@ Maventest/target/classes/META-INF/maven/group39/Maventest/pom.properties
 Maventest/target/classes/GUI_Test.class
 
 *.class
+/bin/
+
+*/git/Database_Project/src/connector01917/Constant.java
