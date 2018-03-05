@@ -8,7 +8,6 @@ import java.util.List;
 import connector01917.Connector;
 import daointerfaces01917.DALException;
 import daointerfaces01917.RaavareDAO;
-import dto01917.OperatoerDTO;
 import dto01917.RaavareDTO;
 
 public class MySQLRaavareDAO implements RaavareDAO{
@@ -52,7 +51,7 @@ public class MySQLRaavareDAO implements RaavareDAO{
 	@Override
 	public void updateRaavare(RaavareDTO raavare) throws DALException {
 		Connector.doUpdate(
-				"UPDATE operatoer SET  raavare_navn = '" + raavare.getRaavareNavn() + "', raavare_id =  '" + raavare.getRaavareId() + 
+				"UPDATE raavare SET  raavare_navn = '" + raavare.getRaavareNavn() + "', raavare_id = '" + raavare.getRaavareId() + 
 				"', raavare_leverandoer = '" + raavare.getLeverandoer() + "' WHERE raavare_id = " +
 				raavare.getRaavareId()
 		);
