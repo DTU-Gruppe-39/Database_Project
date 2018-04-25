@@ -1,5 +1,7 @@
 package daoimpl01917;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,11 +25,27 @@ public class MySQLProduktBatchDAO implements ProduktBatchDAO {
 		
 	}
 	@Override
-	public void createProduktBatch(ProduktBatchDTO pb) throws DALException {		
-			Connector.doUpdate(
-				"INSERT INTO produktbatch(pb_id, status, recept_id) VALUES " +
-				"(" + pb.getPbId() + ", '" + pb.getStatus() + "', '" + pb.getReceptId() + "')"
-			);
+	public void createProduktBatch(ProduktBatchDTO pb) throws DALException, SQLException {		
+		Connection conn = Connector.getConn();
+		PreparedStatement createProBatch = null;
+		
+		String createProBa = "INSERT INTO produktbatch(pb_id, status, recept_id) VALUES " + 
+		"(?, ?, ?)";
+		
+		try {
+			createProBatch = conn.prepareStatement(createProBa);
+			
+			createProBatch.setInt(1, pb.getPbId());
+			createProBatch.setInt(2, pb.getStatus());
+			createProBatch.setInt(3, pb.getReceptId());
+		} catch (SQLException e) {
+			//Do error handling
+			//TODO
+		} finally {
+			if (createProBatch != null) {
+				createProBatch.close();
+			}
+		}
 	}
 	@Override
 	public void updateProduktBatch(ProduktBatchDTO pb) throws DALException {
