@@ -28,7 +28,7 @@ public class MySQLRollerDAO implements RollerDAO {
 			getRoller = conn.prepareStatement(getRolle);
 			getRoller.setInt(1, opr_id);
 			rs = getRoller.executeQuery();
-			if (!rs.first()) throw new DALException("Operatoeren " + cpr + " findes ikke");
+			if (!rs.first()) throw new DALException("Cpr nummeret " + cpr + " findes ikke");
 			rolleDTO = new RollerDTO (rs.getInt("opr_id"), rs.getString("cpr"), rolleEnum.valueOf(rs.getString("rolle")));
 		} catch (SQLException e ) {
 			//Do error handling

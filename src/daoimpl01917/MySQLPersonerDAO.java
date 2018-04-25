@@ -27,7 +27,7 @@ public class MySQLPersonerDAO implements PersonerDAO {
 			getPerson = conn.prepareStatement(getper);
 			getPerson.setInt(1, cpr);
 			rs = getPerson.executeQuery();
-			if (!rs.first()) throw new DALException("Operatoeren " + cpr + " findes ikke");
+			if (!rs.first()) throw new DALException("Personen " + cpr + " findes ikke");
 			perDTO = new PersonerDTO (rs.getString("cpr"), rs.getString("opr_navn"), rs.getString("ini"));
 		} catch (SQLException e ) {
 			//Do error handling
@@ -99,7 +99,7 @@ public class MySQLPersonerDAO implements PersonerDAO {
 		Connection conn = Connector.getConn();
 		PreparedStatement updatePerson = null;
 		
-		String updatePer = "UPDATE operatoer SET opr_navn = ?, ini = ? WHERE cpr = ?";
+		String updatePer = "UPDATE personer SET opr_navn = ?, ini = ? WHERE cpr = ?";
 		
 		try {
 			updatePerson = conn.prepareStatement(updatePer);
