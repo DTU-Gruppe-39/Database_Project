@@ -1,12 +1,13 @@
 package daoimpl01917;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.sql.Connection;
 
 import connector01917.Connector;
-
 import daointerfaces01917.DALException;
 import daointerfaces01917.OperatoerDAO;
 import dto01917.OperatoerDTO;
@@ -22,12 +23,27 @@ public class MySQLOperatoerDAO implements OperatoerDAO {
 		
 	}
 	
-	public void createOperatoer(OperatoerDTO opr) throws DALException {		
-			Connector.doUpdate(
-				"INSERT INTO operatoer(opr_id, opr_navn, ini, cpr, password) VALUES " +
-				"(" + opr.getOprId() + ", '" + opr.getOprNavn() + "', '" + opr.getIni() + "', '" + 
-				opr.getCpr() + "', '" + opr.getPassword() + "')"
-			);
+	public void createOperatoer(OperatoerDTO opr) throws DALException, SQLException {		
+		Connection conn = Connector.getConn();
+		PreparedStatement createOperat = null;
+		
+		String createOpr = "INSERT INTO operatoer(opr_id, password) VALUES " +
+						"( ? , ? )";
+
+		
+		try {
+			createOperat = conn.prepareStatement(createOpr);
+			
+			createOperat.setInt(1, opr.getOprId());
+			createOperat.setString(5, opr.getPassword());
+		} catch (SQLException e ) {
+			//Do error handling
+			//TODO
+		} finally {
+			if (createOperat != null) {
+				createOperat.close();
+	        }
+		}
 	}
 	
 	public void updateOperatoer(OperatoerDTO opr) throws DALException {
