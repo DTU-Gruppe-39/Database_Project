@@ -14,16 +14,32 @@ import dto01917.OperatoerDTO;
 
 public class MySQLOperatoerDAO implements OperatoerDAO {
 	/**
-	 * Missing
+	 * Done
+	 * @throws SQLException 
 	 */
-	public OperatoerDTO getOperatoer(int oprId) throws DALException {
-		ResultSet rs = Connector.doQuery("SELECT * FROM operatoer WHERE opr_id = " + oprId);
-	    try {
-	    	if (!rs.first()) throw new DALException("Operatoeren " + oprId + " findes ikke");
-	    	return new OperatoerDTO (rs.getInt("opr_id"), rs.getString("password"));
-	    }
-	    catch (SQLException e) {throw new DALException(e); }
+	public OperatoerDTO getOperatoer(int oprId) throws DALException, SQLException {
+		Connection conn = Connector.getConn();
+		PreparedStatement getOperat = null;
+		ResultSet rs = null;
+		OperatoerDTO oprDTO = null;
 		
+		String getOpr = "SELECT * FROM operatoer WHERE opr_id = ?";
+		
+		try {
+			getOperat = conn.prepareStatement(getOpr);
+			getOperat.setInt(1, oprId);
+			rs = getOperat.executeQuery();
+			if (!rs.first()) throw new DALException("Operatoeren " + oprId + " findes ikke");
+			oprDTO = new OperatoerDTO (rs.getInt("opr_id"), rs.getString("password"));
+		} catch (SQLException e ) {
+			//Do error handling
+			//TODO
+		} finally {
+			if (getOperat != null) {
+				getOperat.close();
+	        }
+		}
+		return oprDTO;
 	}
 	/**
 	 * Done
@@ -79,7 +95,7 @@ public class MySQLOperatoerDAO implements OperatoerDAO {
 	}
 	
 	/**
-	 * Missing
+	 * Done
 	 * @throws SQLException 
 	 */
 	public List<OperatoerDTO> getOperatoerList() throws DALException, SQLException {
@@ -106,19 +122,6 @@ public class MySQLOperatoerDAO implements OperatoerDAO {
 	        }
 		}
 		return list;
-		
-		
-		
-		
-//		ResultSet rs = Connector.doQuery("SELECT * FROM operatoer");
-//		try
-//		{
-//			while (rs.next()) 
-//			{
-//				list.add(new OperatoerDTO(rs.getInt("opr_id"), rs.getString("password")));
-//			}
-//		}
-//		catch (SQLException e) { throw new DALException(e); }
 	}
 		
 		
