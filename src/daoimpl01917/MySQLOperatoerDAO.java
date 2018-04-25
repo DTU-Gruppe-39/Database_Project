@@ -13,16 +13,21 @@ import daointerfaces01917.OperatoerDAO;
 import dto01917.OperatoerDTO;
 
 public class MySQLOperatoerDAO implements OperatoerDAO {
+	/**
+	 * Missing
+	 */
 	public OperatoerDTO getOperatoer(int oprId) throws DALException {
 		ResultSet rs = Connector.doQuery("SELECT * FROM operatoer WHERE opr_id = " + oprId);
 	    try {
 	    	if (!rs.first()) throw new DALException("Operatoeren " + oprId + " findes ikke");
-	    	return new OperatoerDTO (rs.getInt("opr_id"), rs.getString("opr_navn"), rs.getString("ini"), rs.getString("cpr"), rs.getString("password"));
+	    	return new OperatoerDTO (rs.getInt("opr_id"), rs.getString("password"));
 	    }
 	    catch (SQLException e) {throw new DALException(e); }
 		
 	}
-	
+	/**
+	 * Done
+	 */
 	public void createOperatoer(OperatoerDTO opr) throws DALException, SQLException {		
 		Connection conn = Connector.getConn();
 		PreparedStatement createOperat = null;
@@ -35,7 +40,8 @@ public class MySQLOperatoerDAO implements OperatoerDAO {
 			createOperat = conn.prepareStatement(createOpr);
 			
 			createOperat.setInt(1, opr.getOprId());
-			createOperat.setString(5, opr.getPassword());
+			createOperat.setString(2, opr.getPassword());
+			createOperat.executeUpdate();
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
@@ -46,26 +52,73 @@ public class MySQLOperatoerDAO implements OperatoerDAO {
 		}
 	}
 	
-	public void updateOperatoer(OperatoerDTO opr) throws DALException {
-		Connector.doUpdate(
-				"UPDATE operatoer SET  opr_navn = '" + opr.getOprNavn() + "', ini =  '" + opr.getIni() + 
-				"', cpr = '" + opr.getCpr() + "', password = '" + opr.getPassword() + "' WHERE opr_id = " +
-				opr.getOprId()
-		);
+	/**
+	 * Done
+	 * @throws SQLException 
+	 */
+	public void updateOperatoer(OperatoerDTO opr) throws DALException, SQLException {
+		Connection conn = Connector.getConn();
+		PreparedStatement updateOperat = null;
+		
+		String updateOpr = "UPDATE operatoer SET password = ? WHERE opr_id = ?";
+		
+		try {
+			updateOperat = conn.prepareStatement(updateOpr);
+			
+			updateOperat.setString(1, opr.getPassword());
+			updateOperat.setInt(2, opr.getOprId());
+			updateOperat.executeUpdate();
+		} catch (SQLException e ) {
+			//Do error handling
+			//TODO
+		} finally {
+			if (updateOperat != null) {
+				updateOperat.close();
+	        }
+		}
 	}
 	
-	public List<OperatoerDTO> getOperatoerList() throws DALException {
+	/**
+	 * Missing
+	 * @throws SQLException 
+	 */
+	public List<OperatoerDTO> getOperatoerList() throws DALException, SQLException {
 		List<OperatoerDTO> list = new ArrayList<OperatoerDTO>();
-		ResultSet rs = Connector.doQuery("SELECT * FROM operatoer");
-		try
-		{
-			while (rs.next()) 
-			{
-				list.add(new OperatoerDTO(rs.getInt("opr_id"), rs.getString("opr_navn"), rs.getString("ini"), rs.getString("cpr"), rs.getString("password")));
-			}
+
+		Connection conn = Connector.getConn();
+		PreparedStatement getOperatList = null;
+		ResultSet rs = null;
+		
+		String getOprList = "SELECT * FROM operatoer";
+		
+		try {
+			getOperatList = conn.prepareStatement(getOprList);
+			rs = getOperatList.executeQuery();
+			while (rs.next()) {
+					list.add(new OperatoerDTO(rs.getInt("opr_id"), rs.getString("password")));
+				}
+		} catch (SQLException e ) {
+			//Do error handling
+			//TODO
+		} finally {
+			if (getOperatList != null) {
+				getOperatList.close();
+	        }
 		}
-		catch (SQLException e) { throw new DALException(e); }
 		return list;
+		
+		
+		
+		
+//		ResultSet rs = Connector.doQuery("SELECT * FROM operatoer");
+//		try
+//		{
+//			while (rs.next()) 
+//			{
+//				list.add(new OperatoerDTO(rs.getInt("opr_id"), rs.getString("password")));
+//			}
+//		}
+//		catch (SQLException e) { throw new DALException(e); }
 	}
 		
 		
