@@ -1,5 +1,7 @@
 package daoimpl01917;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,48 +11,150 @@ import connector01917.Connector;
 import daointerfaces01917.DALException;
 import daointerfaces01917.ReceptDAO;
 import dto01917.ReceptDTO;
+import dto01917.ReceptKompDTO;
 
 public class MySQLReceptDAO implements ReceptDAO {
 
 	@Override
-	public ReceptDTO getRecept(int receptId) throws DALException {
-		ResultSet rs = Connector.doQuery("SELECT * FROM recept WHERE recept_id = " + receptId);
-	    try {
+	public ReceptDTO getRecept(int receptId) throws DALException, SQLException {
+		Connection conn = Connector.getConn();
+		PreparedStatement getRecep = null;
+		ResultSet rs = null;
+		ReceptDTO ReDTO = null;
+		
+		String getRcpt = "SELECT * FROM recept WHERE recept_id = ?";
+		
+		try {
+			getRecep = conn.prepareStatement(getRcpt);
+			getRecep.setInt(1, receptId);
+			rs = getRecep.executeQuery();
 	    	if (!rs.first()) throw new DALException("Recepten " + receptId + " findes ikke");
-	    	return new ReceptDTO (rs.getInt("recept_id"), rs.getString("recept_navn"));
-	    }
-	    catch (SQLException e) {throw new DALException(e); }
+			ReDTO = new ReceptDTO (rs.getInt("recept_id"), rs.getString("recept_navn"));
+		} catch (SQLException e) {
+			//do error handling
+			//TODO
+		} finally {
+			if (getRecep != null) {
+				getRecep.close();
+			}
+		}
+		return ReDTO;
 	}
+		
+		
+		
+		
+//		ResultSet rs = Connector.doQuery("SELECT * FROM recept WHERE recept_id = " + receptId);
+//	    try {
+//	    	if (!rs.first()) throw new DALException("Recepten " + receptId + " findes ikke");
+//	    	return new ReceptDTO (rs.getInt("recept_id"), rs.getString("recept_navn"));
+//	    }
+//	    catch (SQLException e) {throw new DALException(e); }
+//	}
 
 	@Override
-	public List<ReceptDTO> getReceptList() throws DALException {
+	public List<ReceptDTO> getReceptList() throws DALException, SQLException {
 		List<ReceptDTO> list = new ArrayList<ReceptDTO>();
-		ResultSet rs = Connector.doQuery("SELECT * FROM recept");
-		try
-		{
+		
+		Connection conn = Connector.getConn();
+		PreparedStatement getRecepList = null;
+		ResultSet rs = null;
+
+		String getRcptList = "SELECT * FROM recept";
+
+		try {
+			getRecepList = conn.prepareStatement(getRcptList);
+			rs = getRecepList.executeQuery();
 			while (rs.next()) 
 			{
 				list.add(new ReceptDTO(rs.getInt("recept_id"), rs.getString("recept_navn")));
 			}
+		} catch (SQLException e) { 
+			throw new DALException(e);
+			//Do error handling
+			//TODO
+		} finally {
+			if (getRecepList != null) {
+				getRecepList.close();
+			}
 		}
-		catch (SQLException e) { throw new DALException(e); }
 		return list;
 	}
+		
+		
+//		ResultSet rs = Connector.doQuery("SELECT * FROM recept");
+//		try
+//		{
+//			while (rs.next()) 
+//			{
+//				list.add(new ReceptDTO(rs.getInt("recept_id"), rs.getString("recept_navn")));
+//			}
+//		}
+//		catch (SQLException e) { throw new DALException(e); }
+//		return list;
+//	}
 
 	@Override
-	public void createRecept(ReceptDTO recept) throws DALException {
-		Connector.doUpdate(
-				"INSERT INTO recept(recept_id, recept_navn) VALUES " +
-				"(" + recept.getReceptId() + ", '" + recept.getReceptNavn() + "')"
-			);
+	public void createRecept(ReceptDTO recept) throws DALException, SQLException {
+		Connection conn = Connector.getConn();
+		PreparedStatement createRec = null;
+		
+		String createRcpt = "INSERT INTO recept(recept_id, recept_navn) VALUES " + "(?, ?,)";
+		
+		try {
+			createRec = conn.prepareStatement(createRcpt);
+
+			createRec.setInt(1, recept.getReceptId());
+			createRec.setString(2, recept.getReceptNavn());
+			createRec.executeUpdate();
+		} catch (SQLException e) {
+			//Do error handling
+			//TODO
+		} finally {
+			if (createRec != null) {
+				createRec.close();
+			}
+		}
 	}
+		
+		
+		
+//		Connector.doUpdate(
+//				"INSERT INTO recept(recept_id, recept_navn) VALUES " +
+//				"(" + recept.getReceptId() + ", '" + recept.getReceptNavn() + "')"
+//			);
+//	}
 
 	@Override
-	public void updateRecept(ReceptDTO recept) throws DALException {
-		Connector.doUpdate(
-				"UPDATE recept SET  recept_id = '" + recept.getReceptId() + "', recept_navn =  '" + recept.getReceptNavn() + "' WHERE opr_id = " +
-				recept.getReceptId()
-		);
-	}
+	public void updateRecept(ReceptDTO recept) throws DALException, SQLException {
+		Connection conn = Connector.getConn();
+		PreparedStatement updateRec = null;
 
+		String updateRcpt = "UPDATE recept SET  recept_id = ?, recept_navn = ? WHERE opr_id = ?";
+		
+		try {
+			updateRec = conn.prepareStatement(updateRcpt);
+
+			updateRec.setInt(1, recept.getReceptId());
+			updateRec.setString(2, recept.getReceptNavn());
+			updateRec.setInt(3, recept.getReceptId());
+			updateRec.executeUpdate();
+		} catch (SQLException e) {
+			//Do error handling
+			//TODO
+		} finally {
+			if (updateRec != null) {
+				updateRec.close();
+			}
+		}
+	}
 }
+		
+//		
+//		Connector.doUpdate(
+//				"UPDATE recept SET  recept_id = '" + recept.getReceptId() + "', recept_navn =  '" + recept.getReceptNavn() + "' WHERE opr_id = " +
+//				recept.getReceptId()
+//		);
+//	}
+//
+//}

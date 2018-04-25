@@ -1,13 +1,14 @@
 package daointerfaces01917;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import dto01917.ReceptKompDTO;
 
 public interface ReceptKompDAO {
-	ReceptKompDTO getReceptKomp(int receptId, int raavareId) throws DALException;
-	List<ReceptKompDTO> getReceptKompList(int receptId) throws DALException;
-	List<ReceptKompDTO> getReceptKompList() throws DALException;
-		void createReceptKomp(ReceptKompDTO receptkomponent) throws DALException;
-	void updateReceptKomp(ReceptKompDTO receptkomponent) throws DALException;
+	ReceptKompDTO getReceptKomp(int receptId, int raavareId) throws DALException, SQLException;
+	List<ReceptKompDTO> getReceptKompList(int receptId) throws DALException, SQLException;
+	List<ReceptKompDTO> getReceptKompList() throws DALException, SQLException;
+		void createReceptKomp(ReceptKompDTO receptkomponent) throws DALException, SQLException;
+	void updateReceptKomp(ReceptKompDTO receptkomponent) throws DALException, SQLException;
 }
