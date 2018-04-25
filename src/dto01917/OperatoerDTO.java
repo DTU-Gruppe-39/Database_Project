@@ -14,7 +14,7 @@ public class OperatoerDTO
 	/** Operatoer password min. 7 max. 8 karakterer */
 	String password;            
 
-	public OperatoerDTO(int oprId, String oprNavn, String ini, String cpr, String password)
+	public OperatoerDTO(int oprId, String password)
 	{
 		this.oprId = oprId;
 		this.password = password;
