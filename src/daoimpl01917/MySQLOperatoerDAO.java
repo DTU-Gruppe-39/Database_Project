@@ -26,18 +26,25 @@ public class MySQLOperatoerDAO implements OperatoerDAO {
 		String getOpr = "SELECT * FROM operatoer WHERE opr_id = ?";
 		
 		try {
+			conn.setAutoCommit(false);
 			getOperat = conn.prepareStatement(getOpr);
 			getOperat.setInt(1, oprId);
 			rs = getOperat.executeQuery();
+			conn.commit();
 			if (!rs.first()) throw new DALException("Operatoeren " + oprId + " findes ikke");
 			oprDTO = new OperatoerDTO (rs.getInt("opr_id"), rs.getString("password"));
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (getOperat != null) {
 				getOperat.close();
 	        }
+			conn.setAutoCommit(true);
 		}
 		return oprDTO;
 	}
@@ -53,18 +60,25 @@ public class MySQLOperatoerDAO implements OperatoerDAO {
 
 		
 		try {
+			conn.setAutoCommit(false);
 			createOperat = conn.prepareStatement(createOpr);
 			
 			createOperat.setInt(1, opr.getOprId());
 			createOperat.setString(2, opr.getPassword());
 			createOperat.executeUpdate();
+			conn.commit();
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (createOperat != null) {
 				createOperat.close();
 	        }
+			conn.setAutoCommit(true);
 		}
 	}
 	
@@ -79,18 +93,25 @@ public class MySQLOperatoerDAO implements OperatoerDAO {
 		String updateOpr = "UPDATE operatoer SET password = ? WHERE opr_id = ?";
 		
 		try {
+			conn.setAutoCommit(false);
 			updateOperat = conn.prepareStatement(updateOpr);
 			
 			updateOperat.setString(1, opr.getPassword());
 			updateOperat.setInt(2, opr.getOprId());
 			updateOperat.executeUpdate();
+			conn.commit();
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (updateOperat != null) {
 				updateOperat.close();
 	        }
+			conn.setAutoCommit(true);
 		}
 	}
 	
@@ -108,18 +129,25 @@ public class MySQLOperatoerDAO implements OperatoerDAO {
 		String getOprList = "SELECT * FROM operatoer";
 		
 		try {
+			conn.setAutoCommit(false);
 			getOperatList = conn.prepareStatement(getOprList);
 			rs = getOperatList.executeQuery();
+			conn.commit();
 			while (rs.next()) {
 					list.add(new OperatoerDTO(rs.getInt("opr_id"), rs.getString("password")));
 				}
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (getOperatList != null) {
 				getOperatList.close();
 	        }
+			conn.setAutoCommit(true);
 		}
 		return list;
 	}

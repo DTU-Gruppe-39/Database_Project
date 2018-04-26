@@ -10,7 +10,6 @@ import java.util.List;
 import connector01917.Connector;
 import daointerfaces01917.DALException;
 import daointerfaces01917.ProduktBatchKompDAO;
-import dto01917.ProduktBatchDTO;
 import dto01917.ProduktBatchKompDTO;
 
 public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
@@ -25,19 +24,26 @@ public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
 		String getProBaKo = "SELECT * FROM produktbatchkomponent WHERE pb_id = ? AND rb_id = ?";
 
 		try {
+			conn.setAutoCommit(false);
 			getProBatchKomp = conn.prepareStatement(getProBaKo);
 			getProBatchKomp.setInt(1, pbId);
 			getProBatchKomp.setInt(2, rbId);
 			rs = getProBatchKomp.executeQuery();
 			if (!rs.first()) throw new DALException("Produktbatchkomponent ID: " + pbId + "eller Raavarebatch ID: " + rbId + " findes ikke");
 			PbkDTO = new ProduktBatchKompDTO (rs.getInt("pb_id"), rs.getInt("rb_id"), rs.getDouble("tara"), rs.getDouble("netto"), rs.getInt("opr_id"));
+			conn.commit();
 		} catch (SQLException e) {
 			//do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (getProBatchKomp != null) {
 				getProBatchKomp.close();
 			}
+			conn.setAutoCommit(true);
 		}
 		return PbkDTO;
 	}
@@ -54,10 +60,12 @@ public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
 		String getProBaKoList = "SELECT * FROM produktbatchkomponent WHERE pb_id = ?";
 
 		try {
+			conn.setAutoCommit(false);
 			getProdBatchKompList = conn.prepareStatement(getProBaKoList);
 
 			getProdBatchKompList.setInt(1, pbId);
 			rs = getProdBatchKompList.executeQuery();
+			conn.commit();
 			while (rs.next())
 			{
 				list.add(new ProduktBatchKompDTO(rs.getInt("pb_id"), rs.getInt("rb_id"), rs.getDouble("tara"), rs.getDouble("netto"), rs.getInt("opr_id")));
@@ -65,10 +73,15 @@ public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
 		} catch (SQLException e) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (getProdBatchKompList != null) {
 				getProdBatchKompList.close();
 			}
+			conn.setAutoCommit(true);
 		}
 		return list;
 	}
@@ -85,20 +98,27 @@ public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
 		String getProBaListKo = "SELECT * FROM produktbatchkomponent";
 
 		try {
+			conn.setAutoCommit(false);
 			getProdBatchListKomp = conn.prepareStatement(getProBaListKo);
 			rs = getProdBatchListKomp.executeQuery();
+			conn.commit();
 			while (rs.next()) 
 			{
 				list.add(new ProduktBatchKompDTO(rs.getInt("pb_id"), rs.getInt("rb_id"), rs.getDouble("tara"), rs.getDouble("netto"), rs.getInt("opr_id")));
 			}
 		} catch (SQLException e) { 
-			throw new DALException(e);
+			//throw new DALException(e);
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (getProdBatchListKomp != null) {
 				getProdBatchListKomp.close();
 			}
+			conn.setAutoCommit(true);
 		}
 		return list;
 	}
@@ -125,6 +145,7 @@ public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
 		String createProBaKo = "INSERT INTO produktbatchkomponent(pb_id, rb_id, tara, netto, opr_id) VALUES " + "(?, ?, ?, ?, ?)";
 		
 		try {
+			conn.setAutoCommit(false);
 			createProBatchKomp = conn.prepareStatement(createProBaKo);
 
 			createProBatchKomp.setInt(1, produktbatchkomponent.getPbId());
@@ -133,16 +154,22 @@ public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
 			createProBatchKomp.setDouble(4, produktbatchkomponent.getNetto());
 			createProBatchKomp.setInt(5, produktbatchkomponent.getOprId());
 			createProBatchKomp.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (createProBatchKomp != null) {
 				createProBatchKomp.close();
 			}
+			conn.setAutoCommit(true);
 		}
 	}
-		
+	
 //		Connector.doUpdate(
 //				"INSERT INTO produktbatchkomponent(pb_id, rb_id, tara, netto, opr_id) VALUES " +
 //						"(" + produktbatchkomponent.getPbId() + ", " + produktbatchkomponent.getRbId() + ", " + produktbatchkomponent.getTara() + ", " + 
@@ -158,6 +185,7 @@ public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
 		String updateProBaKo = "UPDATE produktbatchkomponent SET  pb_id = ?, rb_id = ?, tara = ?, netto = ?, opr_id = ? WHERE pb_id = ? AND rb_id = ?";
 		
 		try {
+			conn.setAutoCommit(false);
 			updateProBatchKomp = conn.prepareStatement(updateProBaKo);
 
 			updateProBatchKomp.setInt(1, produktbatchkomponent.getPbId());
@@ -168,13 +196,19 @@ public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
 			updateProBatchKomp.setInt(6, produktbatchkomponent.getPbId());
 			updateProBatchKomp.setInt(7, produktbatchkomponent.getRbId());
 			updateProBatchKomp.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (updateProBatchKomp != null) {
 				updateProBatchKomp.close();
 			}
+			conn.setAutoCommit(true);
 		}
 	}
 }

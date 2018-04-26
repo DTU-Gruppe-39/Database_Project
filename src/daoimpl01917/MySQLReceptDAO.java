@@ -11,7 +11,6 @@ import connector01917.Connector;
 import daointerfaces01917.DALException;
 import daointerfaces01917.ReceptDAO;
 import dto01917.ReceptDTO;
-import dto01917.ReceptKompDTO;
 
 public class MySQLReceptDAO implements ReceptDAO {
 
@@ -25,18 +24,25 @@ public class MySQLReceptDAO implements ReceptDAO {
 		String getRcpt = "SELECT * FROM recept WHERE recept_id = ?";
 		
 		try {
+			conn.setAutoCommit(false);
 			getRecep = conn.prepareStatement(getRcpt);
 			getRecep.setInt(1, receptId);
 			rs = getRecep.executeQuery();
+			conn.commit();
 	    	if (!rs.first()) throw new DALException("Recepten " + receptId + " findes ikke");
 			ReDTO = new ReceptDTO (rs.getInt("recept_id"), rs.getString("recept_navn"));
 		} catch (SQLException e) {
 			//do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (getRecep != null) {
 				getRecep.close();
 			}
+			conn.setAutoCommit(true);
 		}
 		return ReDTO;
 	}
@@ -63,20 +69,27 @@ public class MySQLReceptDAO implements ReceptDAO {
 		String getRcptList = "SELECT * FROM recept";
 
 		try {
+			conn.setAutoCommit(false);
 			getRecepList = conn.prepareStatement(getRcptList);
 			rs = getRecepList.executeQuery();
+			conn.commit();
 			while (rs.next()) 
 			{
 				list.add(new ReceptDTO(rs.getInt("recept_id"), rs.getString("recept_navn")));
 			}
 		} catch (SQLException e) { 
-			throw new DALException(e);
+			//throw new DALException(e);
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (getRecepList != null) {
 				getRecepList.close();
 			}
+			conn.setAutoCommit(true);
 		}
 		return list;
 	}
@@ -102,18 +115,25 @@ public class MySQLReceptDAO implements ReceptDAO {
 		String createRcpt = "INSERT INTO recept(recept_id, recept_navn) VALUES " + "(?, ?,)";
 		
 		try {
+			conn.setAutoCommit(false);
 			createRec = conn.prepareStatement(createRcpt);
 
 			createRec.setInt(1, recept.getReceptId());
 			createRec.setString(2, recept.getReceptNavn());
 			createRec.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (createRec != null) {
 				createRec.close();
 			}
+			conn.setAutoCommit(true);
 		}
 	}
 		
@@ -133,19 +153,26 @@ public class MySQLReceptDAO implements ReceptDAO {
 		String updateRcpt = "UPDATE recept SET  recept_id = ?, recept_navn = ? WHERE opr_id = ?";
 		
 		try {
+			conn.setAutoCommit(false);
 			updateRec = conn.prepareStatement(updateRcpt);
 
 			updateRec.setInt(1, recept.getReceptId());
 			updateRec.setString(2, recept.getReceptNavn());
 			updateRec.setInt(3, recept.getReceptId());
 			updateRec.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (updateRec != null) {
 				updateRec.close();
 			}
+			conn.setAutoCommit(true);
 		}
 	}
 }

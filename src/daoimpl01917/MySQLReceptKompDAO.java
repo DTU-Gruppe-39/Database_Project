@@ -25,19 +25,26 @@ public class MySQLReceptKompDAO implements ReceptKompDAO {
 		String getRecptKo = "SELECT * FROM receptkomponent WHERE recept_id = ? AND raavare_id = ?";
 		
 		try {
+			conn.setAutoCommit(false);
 			getRecepKomp = conn.prepareStatement(getRecptKo);
 			getRecepKomp.setInt(1, receptId);
 			getRecepKomp.setInt(2, raavareId);
 			rs = getRecepKomp.executeQuery();
+			conn.commit();
 	    	if (!rs.first()) throw new DALException("Receptkomponentet med recept ID: " + receptId + " eller raavare ID: " + raavareId + " findes ikke");
 			RkDTO = new ReceptKompDTO (rs.getInt("recept_id"), rs.getInt("raavare_id"), rs.getDouble("nom_netto"), rs.getDouble("tolerance"));
 		} catch (SQLException e) {
 			//do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (getRecepKomp != null) {
 				getRecepKomp.close();
 			}
+			conn.setAutoCommit(true);
 		}
 		return RkDTO;
 	}
@@ -53,20 +60,27 @@ public class MySQLReceptKompDAO implements ReceptKompDAO {
 		String getRcptKoList = "SELECT * FROM receptkomponent WHERE recept_id = ?";
 		
 		try {
+			conn.setAutoCommit(false);
 			getRecepKompList = conn.prepareStatement(getRcptKoList);
 
 			getRecepKompList.setInt(1, receptId);
 			rs = getRecepKompList.executeQuery();
+			conn.commit();
 			while (rs.next())
 			{
 				list.add(new ReceptKompDTO(rs.getInt("recept_id"), rs.getInt("raavare_id"), rs.getDouble("nom_netto"), rs.getDouble("tolerance")));			}
 		} catch (SQLException e) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (getRecepKompList != null) {
 				getRecepKompList.close();
 			}
+			conn.setAutoCommit(true);
 		}
 		return list;
 	}
@@ -94,20 +108,27 @@ public class MySQLReceptKompDAO implements ReceptKompDAO {
 		String getRcptListKo = "SELECT * FROM receptkomponent";
 
 		try {
+			conn.setAutoCommit(false);
 			getReceptListKomp = conn.prepareStatement(getRcptListKo);
 			rs = getReceptListKomp.executeQuery();
+			conn.commit();
 			while (rs.next()) 
 			{
 				list.add(new ReceptKompDTO(rs.getInt("recept_id"), rs.getInt("raavare_id"), rs.getDouble("nom_netto"), rs.getDouble("tolerance")));
 			}
 		} catch (SQLException e) { 
-			throw new DALException(e);
+			//throw new DALException(e);
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (getReceptListKomp != null) {
 				getReceptListKomp.close();
 			}
+			conn.setAutoCommit(true);
 		}
 		return list;
 	}
@@ -134,6 +155,7 @@ public class MySQLReceptKompDAO implements ReceptKompDAO {
 		String createRcptKo = "INSERT INTO receptkomponent(recept_id, raavare_id, nom_netto, tolerance) VALUES " + "(?, ?, ?, ?)";
 		
 		try {
+			conn.setAutoCommit(false);
 			createRecKomp = conn.prepareStatement(createRcptKo);
 
 			createRecKomp.setInt(1, receptkomponent.getReceptId());
@@ -141,13 +163,19 @@ public class MySQLReceptKompDAO implements ReceptKompDAO {
 			createRecKomp.setDouble(3, receptkomponent.getNomNetto());
 			createRecKomp.setDouble(4, receptkomponent.getTolerance());
 			createRecKomp.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (createRecKomp != null) {
 				createRecKomp.close();
 			}
+			conn.setAutoCommit(true);
 		}
 	}
 //		Connector.doUpdate(
@@ -166,6 +194,7 @@ public class MySQLReceptKompDAO implements ReceptKompDAO {
 		String updateRcptKo = "UPDATE receptkomponent SET recept_id = ?, raavare_id = ?, nom_netto = ?, tolerance = ? WHERE recept_id = ? AND raavare_id = ?";
 		
 		try {
+			conn.setAutoCommit(false);
 			updateRecKomp = conn.prepareStatement(updateRcptKo);
 
 			updateRecKomp.setInt(1, receptkomponent.getReceptId());
@@ -175,13 +204,19 @@ public class MySQLReceptKompDAO implements ReceptKompDAO {
 			updateRecKomp.setInt(5, receptkomponent.getReceptId());
 			updateRecKomp.setInt(6, receptkomponent.getRaavareId());
 			updateRecKomp.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			//Do error handling
 			//TODO
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Transation was rolled back");
+			conn.rollback();
 		} finally {
 			if (updateRecKomp != null) {
 				updateRecKomp.close();
 			}
+			conn.setAutoCommit(true);
 		}
 	}
 		
