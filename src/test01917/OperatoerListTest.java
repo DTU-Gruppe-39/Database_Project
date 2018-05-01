@@ -46,7 +46,7 @@ MySQLOperatoerDAO testOp = new MySQLOperatoerDAO();
 			OperatoerDTO Opr7DTO = testList.get(4);
 			
 			// The test for the operatoer with the oprId 1
-			OperatoerDTO testOprDTO1 = new OperatoerDTO(1,"lKje4fa");
+			OperatoerDTO testOprDTO1 = testOp.getOperatoer(1);
 			int actual1 = Opr1DTO.getOprId();
 			int expected1 = testOprDTO1.getOprId();
 			assertEquals(expected1, actual1);
@@ -55,7 +55,7 @@ MySQLOperatoerDAO testOp = new MySQLOperatoerDAO();
 			assertEquals(expected1p, actual1p);
 			
 			// The test for the operatoer with the oprId 2
-			OperatoerDTO testOprDTO2 = new OperatoerDTO(2,"atoJ21v");
+			OperatoerDTO testOprDTO2 = testOp.getOperatoer(2);
 			int actual2 = Opr2DTO.getOprId();
 			int expected2 = testOprDTO2.getOprId();
 			assertEquals(expected2, actual2);
@@ -64,7 +64,7 @@ MySQLOperatoerDAO testOp = new MySQLOperatoerDAO();
 			assertEquals(expected2p, actual2p);
 			
 			// The test for the operatoer with the oprId 3
-			OperatoerDTO testOprDTO3 = new OperatoerDTO(3,"jEfm5aQ");
+			OperatoerDTO testOprDTO3 = testOp.getOperatoer(3);;
 			int actual3 = Opr3DTO.getOprId();
 			int expected3 = testOprDTO3.getOprId();
 			assertEquals(expected3, actual3);
@@ -73,7 +73,7 @@ MySQLOperatoerDAO testOp = new MySQLOperatoerDAO();
 			assertEquals(expected3p, actual3p);
 			
 			// The test for the operatoer with the oprId 6
-			OperatoerDTO testOprDTO6 = new OperatoerDTO(6,"UpdateTestPass432");
+			OperatoerDTO testOprDTO6 = testOp.getOperatoer(6);;
 			int actual6 = Opr6DTO.getOprId();
 			int expected6 = testOprDTO6.getOprId();
 			assertEquals(expected6, actual6);
@@ -82,7 +82,7 @@ MySQLOperatoerDAO testOp = new MySQLOperatoerDAO();
 			assertEquals(expected6p, actual6p);
 			
 			// The test for the operatoer with the oprId 7
-			OperatoerDTO testOprDTO7 = new OperatoerDTO(7,"testPass324");
+			OperatoerDTO testOprDTO7 = testOp.getOperatoer(7);;
 			int actual7 = Opr7DTO.getOprId();
 			int expected7 = testOprDTO7.getOprId();
 			assertEquals(expected7, actual7);

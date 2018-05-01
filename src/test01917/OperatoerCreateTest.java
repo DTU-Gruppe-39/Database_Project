@@ -31,7 +31,7 @@ public class OperatoerCreateTest {
 	}
 
 	@Test
-	public void test() {
+	public void testOprId() {
 		try {			
 			OperatoerDTO testDTO = new OperatoerDTO(6,"testPass324");
 			testOp.createOperatoer(testDTO);
