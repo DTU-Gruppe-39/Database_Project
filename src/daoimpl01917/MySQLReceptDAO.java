@@ -11,7 +11,6 @@ import connector01917.Connector;
 import daointerfaces01917.DALException;
 import daointerfaces01917.ReceptDAO;
 import dto01917.ReceptDTO;
-import dto01917.ReceptKompDTO;
 
 public class MySQLReceptDAO implements ReceptDAO {
 
@@ -70,7 +69,7 @@ public class MySQLReceptDAO implements ReceptDAO {
 				list.add(new ReceptDTO(rs.getInt("recept_id"), rs.getString("recept_navn")));
 			}
 		} catch (SQLException e) { 
-			throw new DALException(e);
+//			throw new DALException(e);
 			//Do error handling
 			//TODO
 		} finally {

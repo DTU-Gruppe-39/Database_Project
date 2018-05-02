@@ -109,7 +109,7 @@ public class MySQLProduktBatchDAO implements ProduktBatchDAO {
 				list.add(new ProduktBatchDTO(rs.getInt("pb_id"), rs.getInt("status"), rs.getInt("recept_id")));
 			}
 		} catch (SQLException e) { 
-			throw new DALException(e);
+			//throw new DALException(e);
 			//Do error handling
 			//TODO
 		} finally {

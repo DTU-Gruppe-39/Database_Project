@@ -10,7 +10,6 @@ import java.util.List;
 import connector01917.Connector;
 import daointerfaces01917.DALException;
 import daointerfaces01917.ProduktBatchKompDAO;
-import dto01917.ProduktBatchDTO;
 import dto01917.ProduktBatchKompDTO;
 
 public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
@@ -92,7 +91,7 @@ public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
 				list.add(new ProduktBatchKompDTO(rs.getInt("pb_id"), rs.getInt("rb_id"), rs.getDouble("tara"), rs.getDouble("netto"), rs.getInt("opr_id")));
 			}
 		} catch (SQLException e) { 
-			throw new DALException(e);
+			//throw new DALException(e);
 			//Do error handling
 			//TODO
 		} finally {

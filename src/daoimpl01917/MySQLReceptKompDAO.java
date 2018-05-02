@@ -10,7 +10,6 @@ import java.util.List;
 import connector01917.Connector;
 import daointerfaces01917.DALException;
 import daointerfaces01917.ReceptKompDAO;
-import dto01917.ProduktBatchKompDTO;
 import dto01917.ReceptKompDTO;
 
 public class MySQLReceptKompDAO implements ReceptKompDAO {
@@ -101,7 +100,7 @@ public class MySQLReceptKompDAO implements ReceptKompDAO {
 				list.add(new ReceptKompDTO(rs.getInt("recept_id"), rs.getInt("raavare_id"), rs.getDouble("nom_netto"), rs.getDouble("tolerance")));
 			}
 		} catch (SQLException e) { 
-			throw new DALException(e);
+//			throw new DALException(e);
 			//Do error handling
 			//TODO
 		} finally {
