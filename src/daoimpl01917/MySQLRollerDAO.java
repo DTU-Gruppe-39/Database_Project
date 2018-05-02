@@ -25,25 +25,18 @@ public class MySQLRollerDAO implements RollerDAO {
 		String getRolle = "SELECT * FROM roller WHERE opr_id = ?";
 		
 		try {
-			conn.setAutoCommit(false);
 			getRoller = conn.prepareStatement(getRolle);
 			getRoller.setInt(1, opr_id);
 			rs = getRoller.executeQuery();
-			conn.commit();
 			if (!rs.first()) throw new DALException("Cpr nummeret " + cpr + " findes ikke");
 			rolleDTO = new RollerDTO (rs.getInt("opr_id"), rs.getString("cpr"), rolleEnum.valueOf(rs.getString("rolle")));
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			System.out.println("Transation was rolled back");
-			conn.rollback();
 		} finally {
 			if (getRoller != null) {
 				getRoller.close();
 	        }
-			conn.setAutoCommit(true);
 		}
 		return rolleDTO;
 	}
@@ -58,26 +51,19 @@ public class MySQLRollerDAO implements RollerDAO {
 		String getRolleList = "SELECT * FROM roller WHERE cpr = ?";
 		
 		try {
-			conn.setAutoCommit(false);
 			getRollerList = conn.prepareStatement(getRolleList);
 			getRollerList.setString(1, cpr);
 			rs = getRollerList.executeQuery();
-			conn.commit();
 			while (rs.next()) {
 					list.add(new RollerDTO(rs.getInt("opr_id"), rs.getString("cpr"), rolleEnum.valueOf(rs.getString("rolle"))));
 				}
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			System.out.println("Transation was rolled back");
-			conn.rollback();
 		} finally {
 			if (getRollerList != null) {
 				getRollerList.close();
 	        }
-			conn.setAutoCommit(true);
 		}
 		return list;
 	}
@@ -93,25 +79,18 @@ public class MySQLRollerDAO implements RollerDAO {
 		String getRolleList = "SELECT * FROM roller";
 		
 		try {
-			conn.setAutoCommit(false);
 			getRollerList = conn.prepareStatement(getRolleList);
 			rs = getRollerList.executeQuery();
-			conn.commit();
 			while (rs.next()) {
 					list.add(new RollerDTO(rs.getInt("opr_id"), rs.getString("cpr"), rolleEnum.valueOf(rs.getString("rolle"))));
 				}
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			System.out.println("Transation was rolled back");
-			conn.rollback();
 		} finally {
 			if (getRollerList != null) {
 				getRollerList.close();
 	        }
-			conn.setAutoCommit(true);
 		}
 		return list;
 	}
@@ -125,25 +104,18 @@ public class MySQLRollerDAO implements RollerDAO {
 						"( ? , ? , ? )";
 		
 		try {
-			conn.setAutoCommit(false);
 			createRoller = conn.prepareStatement(createRolle);
 			createRoller.setInt(1, rolle.getOprId());
 			createRoller.setString(2, rolle.getCpr());
 			createRoller.setString(3, rolle.getRolle().toString());
 			createRoller.executeUpdate();
-			conn.commit();
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			System.out.println("Transation was rolled back");
-			conn.rollback();
 		} finally {
 			if (createRoller != null) {
 				createRoller.close();
 	        }
-			conn.setAutoCommit(true);
 		}
 		
 	}
@@ -156,25 +128,18 @@ public class MySQLRollerDAO implements RollerDAO {
 		String updateRolle = "UPDATE rolle SET rolle = ? WHERE opr_id = ?";
 		
 		try {
-			conn.setAutoCommit(false);
 			updateRoller = conn.prepareStatement(updateRolle);
 			
 			updateRoller.setString(1, rolle.getRolle().toString());
 			updateRoller.setInt(2, rolle.getOprId());
 			updateRoller.executeUpdate();
-			conn.commit();
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			System.out.println("Transation was rolled back");
-			conn.rollback();
 		} finally {
 			if (updateRoller != null) {
 				updateRoller.close();
 	        }
-			conn.setAutoCommit(true);
 		}
 		
 	}

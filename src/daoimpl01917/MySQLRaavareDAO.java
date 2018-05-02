@@ -24,25 +24,18 @@ public class MySQLRaavareDAO implements RaavareDAO{
 		String getraa = "SELECT * FROM raavare WHERE raavare_id = ?";
 		
 		try {
-			conn.setAutoCommit(false);
 			getraavare = conn.prepareStatement(getraa);
 			getraavare.setInt(1, raavareId);
 			rs = getraavare.executeQuery();
-			conn.commit();
 			if (!rs.first()) throw new DALException("Raavaren med id:  " + raavareId + " findes ikke");
 			raaDTO = new RaavareDTO (rs.getInt("raavare_id"), rs.getString("raavare_navn"), rs.getString("leverandoer"));
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			System.out.println("Transation was rolled back");
-			conn.rollback();
 		} finally {
 			if (getraavare != null) {
 				getraavare.close();
 	        }
-			conn.setAutoCommit(true);
 		}
 		return raaDTO;
 	}
@@ -58,25 +51,18 @@ public class MySQLRaavareDAO implements RaavareDAO{
 		String getRaaList = "SELECT * FROM raavare";
 		
 		try {
-			conn.setAutoCommit(false);
 			getRaavareList = conn.prepareStatement(getRaaList);
 			rs = getRaavareList.executeQuery();
-			conn.commit();
 			while (rs.next()) {
 					list.add(new RaavareDTO(rs.getInt("raavare_id"),rs.getString("raavare_leverandoer"),rs.getString("raavare_navn")));
 				}
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			System.out.println("Transation was rolled back");
-			conn.rollback();
 		} finally {
 			if (getRaavareList != null) {
 				getRaavareList.close();
 	        }
-			conn.setAutoCommit(true);
 		}
 		return list;
 	}
@@ -89,26 +75,19 @@ public class MySQLRaavareDAO implements RaavareDAO{
 		String createRaa = "INSERT INTO raavare(raavare_id, raavare_navn, raavare_leverandoer) VALUES ( ? , ? , ? )";
 
 		try {
-			conn.setAutoCommit(false);
 			createRaavare = conn.prepareStatement(createRaa);
 			
 			createRaavare.setInt(1, raavare.getRaavareId());
 			createRaavare.setString(2, raavare.getRaavareNavn());
 			createRaavare.setString(3, raavare.getLeverandoer());
 			createRaavare.executeUpdate();
-			conn.commit();
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			System.out.println("Transation was rolled back");
-			conn.rollback();
 		} finally {
 			if (createRaavare != null) {
 				createRaavare.close();
 	        }
-			conn.setAutoCommit(true);
 		}
 	}
 		
@@ -121,25 +100,18 @@ public class MySQLRaavareDAO implements RaavareDAO{
 		String updateRaa = "UPDATE raavare SET raavare_navn = ? , raavare_leverandoer = ? WHERE raavare_id = ?";
 		
 		try {
-			conn.setAutoCommit(false);
 			updateRaavare = conn.prepareStatement(updateRaa);
 			updateRaavare.setString(1, raavare.getRaavareNavn());
 			updateRaavare.setString(2, raavare.getLeverandoer());
 			updateRaavare.setInt(3, raavare.getRaavareId());
 			updateRaavare.executeUpdate();
-			conn.commit();
 		} catch (SQLException e ) {
 			//Do error handling
 			//TODO
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			System.out.println("Transation was rolled back");
-			conn.rollback();
 		} finally {
 			if (updateRaavare != null) {
 				updateRaavare.close();
 	        }
-			conn.setAutoCommit(true);
 		}
 	}
 }
