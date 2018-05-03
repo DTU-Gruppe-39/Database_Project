@@ -122,5 +122,29 @@ INSERT INTO produktbatchkomponent(pb_id, rb_id, tara, netto, opr_id) VALUES
 (4, 6, 0.5, 1.03, 3),
 (4, 7, 0.5, 0.99, 3);
 
+delimiter //
+create procedure NewEmployee(in oprnavn varchar(29), ini_ varchar(4), cpr_n varchar(11), opr_Id int(7), rolle ENUM('Admin', 'Laborant', 'Produktionsleder', 'test'), password_ varchar(12))
+begin 
 
+
+declare exit handler for sqlexception
+	begin 
+	rollback;
+
+END;
+
+start transaction;
+
+insert into personer 
+(cpr, opr_navn, ini) value(cpr_n, oprnavn, ini_);
+
+insert into operatoer
+(opr_id, password) values(opr_Id, password_);
+
+insert into roller 
+(opr_id, cpr, rolle) value(opr_Id, cpr_n, rolle);
+
+commit;
+end; //
+delimiter ;
  
