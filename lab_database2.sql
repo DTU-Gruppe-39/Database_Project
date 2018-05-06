@@ -136,13 +136,13 @@ END;
 start transaction;
 
 insert into personer 
-(cpr, opr_navn, ini) value(cpr_n, oprnavn, ini_);
+(cpr, opr_navn, ini) values(cpr_n, oprnavn, ini_);
 
 insert into operatoer
 (opr_id, password) values(opr_Id, password_);
 
 insert into roller 
-(opr_id, cpr, rolle) value(opr_Id, cpr_n, rolle);
+(opr_id, cpr, rolle) values(opr_Id, cpr_n, rolle);
 
 commit;
 end; //
