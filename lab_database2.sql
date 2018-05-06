@@ -13,7 +13,7 @@ CREATE TABLE operatoer(opr_id INT PRIMARY KEY, password TEXT) ENGINE=innoDB;
 
 CREATE TABLE personer(cpr varchar(11) PRIMARY KEY, opr_navn TEXT, ini TEXT) ENGINE=innoDB;
 
-CREATE TABLE roller(opr_id INT, cpr varchar(11), rolle ENUM('Admin', 'Pharmacist', 'Produktionsleder', 'Laborant'),
+CREATE TABLE roller(opr_id INT, cpr varchar(11), rolle ENUM('Admin', 'Pharmacist', 'Foreman', 'Laborant'),
 	PRIMARY KEY (opr_id, cpr),
 	FOREIGN KEY (opr_id) REFERENCES operatoer(opr_id),
 	FOREIGN KEY (cpr) REFERENCES personer(cpr)) ENGINE=innoDB;
@@ -53,7 +53,7 @@ INSERT INTO personer(cpr, opr_navn, ini) VALUES
 INSERT INTO roller(opr_id, cpr, rolle) VALUES
 (1, '070770-7007', 'Admin' ),
 (2, '080880-8008', 'Laborant'),
-(3, '090990-9009', 'Produktionsleder');
+(3, '090990-9009', 'Foreman');
 
 INSERT INTO raavare(raavare_id, raavare_navn, leverandoer) VALUES
 (1, 'dej', 'Wawelka'),
