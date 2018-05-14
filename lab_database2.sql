@@ -171,6 +171,8 @@ natural join raavare;
 
 CREATE VIEW ForemanView as 
 select rb_id, opr_id, pb_id, opr_navn, ini, status, raavare_navn, leverandoer, maengde, recept_id from operatoer
+natural join personer
+natural join roller
 natural join produktbatchkomponent
 natural join produktbatch
 natural join raavare
